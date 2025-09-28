@@ -51,8 +51,11 @@ func CreateLexer(source string) *Lexer {
 		Tokens:     make([]Token, 0),
 		pattern: []RegexPattern{
 			//numbers strings etc.
+			{regexp.MustCompile(`[a-zA-Z_][a-zA-Z0-9_]*`), symbolHandler},
 			{regexp.MustCompile(`[0-9]+(\.[0-9]+)?`), numberHandler},
 			{regexp.MustCompile(`\s+`), skipHandler},
+			{regexp.MustCompile(`\/\/.*`), skipHandler},
+			{regexp.MustCompile(`"[^"]*"`), stringHandler},
 			//default handlers
 			{regexp.MustCompile(`\[`), defaultHandler(OPEN_BRACKET, "[")},
 			{regexp.MustCompile(`\]`), defaultHandler(OPEN_BRACKET, "]")},
@@ -69,6 +72,12 @@ func CreateLexer(source string) *Lexer {
 			{regexp.MustCompile(`>=`), defaultHandler(GREATER_EQUALS, ">=")},
 			{regexp.MustCompile(`>`), defaultHandler(GREATER, ">")},
 			{regexp.MustCompile(`\|\|`), defaultHandler(OR, "||")},
+			{regexp.MustCompile(`&&`), defaultHandler(AND, "&&")},
+			{regexp.MustCompile(`\.\.`), defaultHandler(DOT_DOT, "..")},
+			{regexp.MustCompile(`\.`), defaultHandler(DOT, ".")},
+			{regexp.MustCompile(`:`), defaultHandler(COLON, ":")},
+			{regexp.MustCompile(`;`), defaultHandler(SEMI_COLON, ";")},
+			{regexp.MustCompile(`\?`), defaultHandler(QUESTION, "?")},
 			{regexp.MustCompile(`\+=`), defaultHandler(PLUS_EQUALS, "+=")},
 			{regexp.MustCompile(`\+`), defaultHandler(PLUS, "+")},
 			{regexp.MustCompile(`-=`), defaultHandler(MINUS_EQUALS, "-=")},
@@ -118,4 +127,17 @@ func numberHandler(lex *Lexer, regex *regexp.Regexp) {
 func skipHandler(lex *Lexer, regex *regexp.Regexp) {
 	match := regex.FindStringIndex(lex.remainder())
 	lex.advanceN(match[1])
+}
+
+func stringHandler(lex *Lexer, regex *regexp.Regexp) {
+	match := regex.FindStringIndex(lex.remainder())
+	stringLiteral := lex.remainder()[match[0]:match[1]]
+
+	lex.push(NewToken(STRING, stringLiteral))
+	lex.advanceN(len(stringLiteral))
+}
+
+func symbolHandler(lex *Lexer, regex *regexp.Regexp) {
+	//match:= regex.FindString(lex.remainder())
+
 }
