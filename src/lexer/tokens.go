@@ -74,6 +74,27 @@ const (
 	NULLISH_ASSIGNMENT
 )
 
+var keywords map[string]TokenKind = map[string]TokenKind{
+	"let":     LET,
+	"const":   CONST,
+	"class":   CLASS,
+	"new":     NEW,
+	"import":  IMPORT,
+	"fn":      FN,
+	"if":      IF,
+	"else":    ELSE,
+	"foreach": FOREACH,
+	"while":   WHILE,
+	"for":     FOR,
+	"export":  EXPORT,
+	"typeof":  TYPEOF,
+	"int":     INT,
+	"in":      IN,
+	"from":    FROM,
+	"true":    TRUE,
+	"false":   FALSE,
+}
+
 type Token struct {
 	Kind  TokenKind
 	Value string

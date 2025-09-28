@@ -138,6 +138,13 @@ func stringHandler(lex *Lexer, regex *regexp.Regexp) {
 }
 
 func symbolHandler(lex *Lexer, regex *regexp.Regexp) {
-	//match:= regex.FindString(lex.remainder())
+	value := regex.FindString(lex.remainder())
 
+	if kind, exists := keywords[value]; exists {
+		lex.push(NewToken(kind, value))
+	} else {
+		lex.push(NewToken(IDENTIFIER, value))
+	}
+
+	lex.advanceN(len(value))
 }
