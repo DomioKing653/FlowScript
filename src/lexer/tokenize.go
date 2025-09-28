@@ -58,7 +58,7 @@ func CreateLexer(source string) *Lexer {
 			{regexp.MustCompile(`"[^"]*"`), stringHandler},
 			//default handlers
 			{regexp.MustCompile(`\[`), defaultHandler(OPEN_BRACKET, "[")},
-			{regexp.MustCompile(`\]`), defaultHandler(OPEN_BRACKET, "]")},
+			{regexp.MustCompile(`\]`), defaultHandler(CLOSE_BRACKET, "]")},
 			{regexp.MustCompile(`\{`), defaultHandler(OPEN_CURLY, "{")},
 			{regexp.MustCompile(`\}`), defaultHandler(CLOSE_CURLY, "}")},
 			{regexp.MustCompile(`\(`), defaultHandler(OPEN_PAREN, "(")},
@@ -75,13 +75,20 @@ func CreateLexer(source string) *Lexer {
 			{regexp.MustCompile(`&&`), defaultHandler(AND, "&&")},
 			{regexp.MustCompile(`\.\.`), defaultHandler(DOT_DOT, "..")},
 			{regexp.MustCompile(`\.`), defaultHandler(DOT, ".")},
-			{regexp.MustCompile(`:`), defaultHandler(COLON, ":")},
 			{regexp.MustCompile(`;`), defaultHandler(SEMI_COLON, ";")},
+			{regexp.MustCompile(`:`), defaultHandler(COLON, ":")},
+			{regexp.MustCompile(`\?\?=`), defaultHandler(NULLISH_ASSIGNMENT, "??=")},
 			{regexp.MustCompile(`\?`), defaultHandler(QUESTION, "?")},
+			{regexp.MustCompile(`,`), defaultHandler(COMMA, ",")},
+			{regexp.MustCompile(`\+\+`), defaultHandler(PLUS_PLUS, "++")},
+			{regexp.MustCompile(`--`), defaultHandler(MINUS_MINUS, "--")},
 			{regexp.MustCompile(`\+=`), defaultHandler(PLUS_EQUALS, "+=")},
-			{regexp.MustCompile(`\+`), defaultHandler(PLUS, "+")},
 			{regexp.MustCompile(`-=`), defaultHandler(MINUS_EQUALS, "-=")},
+			{regexp.MustCompile(`\+`), defaultHandler(PLUS, "+")},
 			{regexp.MustCompile(`-`), defaultHandler(DASH, "-")},
+			{regexp.MustCompile(`/`), defaultHandler(SLASH, "/")},
+			{regexp.MustCompile(`\*`), defaultHandler(STAR, "*")},
+			{regexp.MustCompile(`%`), defaultHandler(PERCENT, "%")},
 		},
 	}
 }
@@ -131,10 +138,10 @@ func skipHandler(lex *Lexer, regex *regexp.Regexp) {
 
 func stringHandler(lex *Lexer, regex *regexp.Regexp) {
 	match := regex.FindStringIndex(lex.remainder())
-	stringLiteral := lex.remainder()[match[0]:match[1]]
+	stringLiteral := lex.remainder()[match[0]+1 : match[1]-1]
 
 	lex.push(NewToken(STRING, stringLiteral))
-	lex.advanceN(len(stringLiteral))
+	lex.advanceN(len(stringLiteral) + 2)
 }
 
 func symbolHandler(lex *Lexer, regex *regexp.Regexp) {
