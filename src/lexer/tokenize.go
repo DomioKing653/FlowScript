@@ -50,9 +50,21 @@ func CreateLexer(source string) *Lexer {
 		currentIdx: 0,
 		Tokens:     make([]Token, 0),
 		pattern: []RegexPattern{
+			//numbers strings etc.
+			{regexp.MustCompile(`[0-9]+(\.[0-9]+)?`), numberHandler},
+			//default handlers
 			{regexp.MustCompile(`\[`), defaultHandler(OPEN_BRACKET, "[")},
 			{regexp.MustCompile(`\]`), defaultHandler(OPEN_BRACKET, "]")},
+			{regexp.MustCompile(`\{`), defaultHandler(OPEN_CURLY, "{")},
+			{regexp.MustCompile(`\}`), defaultHandler(CLOSE_CURLY, "}")},
+			{regexp.MustCompile(`\(`), defaultHandler(OPEN_PAREN, "(")},
+			{regexp.MustCompile(`\)`), defaultHandler(CLOSE_PAREN, ")")},
+			{regexp.MustCompile(`\==`), defaultHandler(EQUALS, "==")},
+			{regexp.MustCompile(`\!=`), defaultHandler(NOT_EQUALS, "!=")},
+			{regexp.MustCompile(`\+=`), defaultHandler(PLUS_EQUALS, "+=")},
 			{regexp.MustCompile(`\+`), defaultHandler(PLUS, "+")},
+			{regexp.MustCompile(`-=`), defaultHandler(MINUS_EQUALS, "-=")},
+			{regexp.MustCompile(`-`), defaultHandler(DASH, "-")},
 		},
 	}
 }

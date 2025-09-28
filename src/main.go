@@ -1,15 +1,19 @@
 package main
 
 import (
-	"fmt"
 	"os"
+
+	"github.com/DomioKing653/FlowScript/src/lexer"
 )
 
 func main() {
-	bytes, err := os.ReadFile("./examples/math.flw")
+	file, err := os.ReadFile("./examples/math.flw")
 	if err != nil {
 		panic(err)
 	}
-	source := string(bytes)
-	fmt.Println(source)
+	tokens := lexer.Tokenize(string(file))
+
+	for _, token := range tokens {
+		token.Debug()
+	}
 }
