@@ -11,6 +11,5 @@ func main() {
 		panic(err)
 	}
 	source := string(bytes)
-
 	fmt.Println(source)
 }
