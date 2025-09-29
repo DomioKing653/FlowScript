@@ -35,10 +35,6 @@ func (lex *Lexer) at_eof() bool {
 	return lex.currentIdx >= len(lex.source)
 }
 
-func (lex *Lexer) at() byte {
-	return lex.source[lex.currentIdx]
-}
-
 func (lex *Lexer) remainder() string {
 	return lex.source[lex.currentIdx:]
 }
@@ -93,7 +89,7 @@ func CreateLexer(source string) *Lexer {
 	}
 }
 
-func Tokenize(source string) []Token {
+func Tokenize(source string) ([]Token, error) {
 	lex := CreateLexer(source)
 	for !lex.at_eof() {
 		matched := false
@@ -107,11 +103,11 @@ func Tokenize(source string) []Token {
 			}
 		}
 		if !matched {
-			panic(fmt.Sprintf("Error::Lexer->unknown token: %s", lex.remainder()))
+			return []Token{}, fmt.Errorf("Error::Lexer->unknown token: %s", lex.remainder())
 		}
 	}
 	lex.push(NewToken(EOF, "EOF"))
-	return lex.Tokens
+	return lex.Tokens, nil
 }
 
 /*
