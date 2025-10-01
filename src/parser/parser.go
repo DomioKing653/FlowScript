@@ -11,9 +11,9 @@ type parser struct {
 	pos    int
 }
 
-func Parse(tokens lexer.Token) ast.BlockStatment {
+func Parse(tokens []lexer.Token) ast.BlockStatment {
 	Body := make([]ast.Statement, 0)
-	p := CreateParser([]lexer.Token{})
+	p := CreateParser(tokens)
 	for p.hasTokens() {
 		Body = append(Body, parse_stmt(p))
 	}
@@ -23,6 +23,7 @@ func Parse(tokens lexer.Token) ast.BlockStatment {
 // HELPER METHODS
 
 func CreateParser(tokens []lexer.Token) *parser {
+	CreateLookups()
 	return &parser{
 		tokens: tokens, pos: 0,
 	}

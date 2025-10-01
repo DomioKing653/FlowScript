@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/DomioKing653/FlowScript/src/lexer"
+	"github.com/DomioKing653/FlowScript/src/parser"
 )
 
 func main() {
@@ -17,8 +18,9 @@ func main() {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-
+	ast := parser.Parse(tokens)
 	for _, token := range tokens {
 		token.Debug()
 	}
+	fmt.Println(ast)
 }

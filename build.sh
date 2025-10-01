@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#Srcipt for building from source 
-
 NAME="Flow"
 
 if [[ "$OS" == "Windows_NT" ]]; then

@@ -5,7 +5,7 @@ import "github.com/DomioKing653/FlowScript/src/lexer"
 //Literal
 
 type NumberExpr struct {
-	value float64
+	Value float64
 }
 
 func (expr *NumberExpr) expr() {
@@ -13,7 +13,7 @@ func (expr *NumberExpr) expr() {
 }
 
 type StringExpr struct {
-	value float64
+	Value string
 }
 
 func (expr StringExpr) expr() {
@@ -21,7 +21,7 @@ func (expr StringExpr) expr() {
 }
 
 type SymbolExpr struct {
-	value float64
+	Value string
 }
 
 func (expr SymbolExpr) expr() {
