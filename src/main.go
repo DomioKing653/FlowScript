@@ -6,6 +6,7 @@ import (
 
 	"github.com/DomioKing653/FlowScript/src/lexer"
 	"github.com/DomioKing653/FlowScript/src/parser"
+	"github.com/sanity-io/litter"
 )
 
 func main() {
@@ -19,8 +20,6 @@ func main() {
 		os.Exit(-1)
 	}
 	ast := parser.Parse(tokens)
-	for _, token := range tokens {
-		token.Debug()
-	}
 	fmt.Println(ast)
+	litter.Dump(ast)
 }

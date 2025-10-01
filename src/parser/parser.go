@@ -1,6 +1,8 @@
 package parser
 
 import (
+	"fmt"
+
 	"github.com/DomioKing653/FlowScript/src/ast"
 
 	"github.com/DomioKing653/FlowScript/src/lexer"
@@ -45,4 +47,23 @@ func (p *parser) advance() lexer.Token {
 
 func (p *parser) hasTokens() bool {
 	return p.pos > len(p.tokens) && p.currentTokenKind() != lexer.EOF
+}
+
+func (p *parser) expectError(expectedKind lexer.TokenKind, err any) lexer.Token {
+	token := p.currentToken()
+	kind := token.Kind
+
+	if kind != expectedKind {
+		if err == nil {
+			err = fmt.Sprintf("Expected %s but recieved %s instead\n", lexer.TokenKindString(expectedKind), lexer.TokenKindString(kind))
+		}
+
+		panic(err)
+	}
+
+	return p.advance()
+}
+
+func (p *parser) expect(expectedKind lexer.TokenKind) lexer.Token {
+	return p.expectError(expectedKind, nil)
 }
