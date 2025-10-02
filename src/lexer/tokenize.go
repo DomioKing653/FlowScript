@@ -103,7 +103,7 @@ func Tokenize(source string) ([]Token, error) {
 			}
 		}
 		if !matched {
-			return []Token{}, fmt.Errorf("Error::Lexer->unknown token: %s", lex.remainder())
+			return []Token{}, fmt.Errorf("Error::Lexing->unknown token: %s", lex.remainder())
 		}
 	}
 	lex.push(NewToken(EOF, "EOF"))

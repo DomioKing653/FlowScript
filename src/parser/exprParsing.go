@@ -13,7 +13,7 @@ func parse_expr(p *parser, bp binding_power) ast.Expression {
 	nud_fn, exists := nud_lu[tokenKind]
 
 	if !exists {
-		panic(fmt.Sprintf("NUD HANDLER EXPECTED TOKEN %s\n", lexer.TokenKindString(tokenKind)))
+		panic(fmt.Sprintf("Error::Parsing->NUD HANDLER EXPECTED TOKEN %s\n", lexer.TokenKindString(tokenKind)))
 	}
 	left := nud_fn(p)
 
@@ -21,7 +21,7 @@ func parse_expr(p *parser, bp binding_power) ast.Expression {
 		tokenKind = p.currentTokenKind()
 		led_fn, exists := led_lu[tokenKind]
 		if !exists {
-			panic(fmt.Sprintf("LED HANDLER EXPECTED TOKEN %s\n", lexer.TokenKindString(tokenKind)))
+			panic(fmt.Sprintf("Error::Parsing->LED HANDLER EXPECTED TOKEN %s\n", lexer.TokenKindString(tokenKind)))
 		}
 		left = led_fn(p, left, bp)
 	}
@@ -38,14 +38,13 @@ func parse_primary_expr(p *parser) ast.Expression {
 	case lexer.IDENTIFIER:
 		return &ast.SymbolExpr{Value: p.advance().Value}
 	default:
-		panic(fmt.Sprintf("cannot create primary_expr from %s\n", lexer.TokenKindString(p.currentTokenKind())))
+		panic(fmt.Sprintf("Error::Parser->cannot create primary_expr from %s\n", lexer.TokenKindString(p.currentTokenKind())))
 	}
 }
 
 func parse_binary_expr(p *parser, left ast.Expression, bp binding_power) ast.Expression {
 	operrator := p.advance()
 	right := parse_expr(p, bp)
-
 	return &ast.BinaryOperation{
 		Operator: operrator,
 		Left:     left,
