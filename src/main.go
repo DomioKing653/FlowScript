@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	file, err := os.ReadFile("./examples/main.flw")
+	file, err := os.ReadFile("./examples/prototype.flw")
 	if err != nil {
 		panic(err)
 	}

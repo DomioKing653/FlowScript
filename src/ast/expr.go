@@ -39,3 +39,22 @@ type BinaryOperation struct {
 func (bin BinaryOperation) expr() {
 
 }
+
+type PrefixEpr struct {
+	Operator  lexer.Token
+	RightExpr Expression
+}
+
+func (n PrefixEpr) expr() {
+
+}
+
+type AssigmentEpr struct {
+	AssignedVar Expression
+	Operator    lexer.Token
+	Value       Expression
+}
+
+func (n AssigmentEpr) expr() {
+
+}

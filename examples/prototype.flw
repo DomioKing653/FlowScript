@@ -1,0 +1,4 @@
+let x = 50;
+const foo = x + -3;
+let bar = x + foo;
+bar = foo;

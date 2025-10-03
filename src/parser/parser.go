@@ -55,7 +55,7 @@ func (p *parser) expectError(expectedKind lexer.TokenKind, err any) lexer.Token 
 
 	if kind != expectedKind {
 		if err == nil {
-			err = fmt.Sprintf("Error::Syntax->Expected %s but recieved %s instead\n", lexer.TokenKindString(expectedKind), lexer.TokenKindString(kind))
+			err = fmt.Sprintf("Error::Syntax->Expected %s but received %s", lexer.TokenKindString(expectedKind), lexer.TokenKindString(kind))
 		}
 
 		panic(err)

@@ -1,0 +1,11 @@
+// Example FlowScript program
+func greet(name) {
+  let message = "Hello, " + name
+  return message
+}
+
+let x = 42
+if x > 10 {
+  // call function
+  greet('World')
+}
