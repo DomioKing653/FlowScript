@@ -78,6 +78,7 @@ func CreateLookups() {
 	nud(lexer.STRING, parse_primary_expr)
 	nud(lexer.IDENTIFIER, parse_primary_expr)
 	nud(lexer.DASH, parse_prefix_expression)
+	nud(lexer.OPEN_PAREN, parse_grouping_expr)
 	//Statment
 	stmt(lexer.CONST, parse_var_decl_statment)
 	stmt(lexer.LET, parse_var_decl_statment)

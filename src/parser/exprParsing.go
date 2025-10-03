@@ -31,11 +31,17 @@ func parse_primary_expr(p *parser) ast.Expression {
 	switch p.currentTokenKind() {
 	case lexer.NUMBER:
 		number, _ := strconv.ParseFloat(p.advance().Value, 64)
-		return &ast.NumberExpr{Value: number}
+		return &ast.NumberExpr{
+			Value: number,
+		}
 	case lexer.STRING:
-		return &ast.StringExpr{Value: p.advance().Value}
+		return &ast.StringExpr{
+			Value: p.advance().Value,
+		}
 	case lexer.IDENTIFIER:
-		return &ast.SymbolExpr{Value: p.advance().Value}
+		return &ast.SymbolExpr{
+			Value: p.advance().Value,
+		}
 	default:
 		panic(fmt.Sprintf("Error::Parsing->Cannot create primary expression from token %s", lexer.TokenKindString(p.currentTokenKind())))
 	}
@@ -57,7 +63,8 @@ func parse_assigment_expr(p *parser, left ast.Expression, bp binding_power) ast.
 	return ast.AssigmentEpr{
 		Value:       rhs,
 		Operator:    token,
-		AssignedVar: left}
+		AssignedVar: left,
+	}
 }
 
 func parse_prefix_expression(p *parser) ast.Expression {
@@ -67,4 +74,11 @@ func parse_prefix_expression(p *parser) ast.Expression {
 		Operator:  operatorToken,
 		RightExpr: rhs,
 	}
+}
+
+func parse_grouping_expr(p *parser) ast.Expression {
+	p.advance()
+	expr := parse_expr(p, default_bp)
+	p.expect(lexer.CLOSE_PAREN)
+	return expr
 }
