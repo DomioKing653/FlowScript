@@ -14,3 +14,5 @@ const Rectangle:rect = Rect{
     width: 3 * 5,
     height: 8 * 3,
 };
+
+const arr:[]number=[]number{5,6,8};

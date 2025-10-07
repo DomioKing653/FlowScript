@@ -92,7 +92,7 @@ func parse_struct_instantiation_expr(p *parser, left ast.Expression, bp binding_
 		propretyName := p.expect(lexer.IDENTIFIER).Value
 		p.expect(lexer.COLON)
 		value := parse_expr(p, logical)
-		
+
 		structPropreties[propretyName] = value
 		if p.currentTokenKind() != lexer.COMMA {
 			panic(fmt.Sprintf("Error::Synax->Expected comma in %s instantiation", structName))
@@ -103,5 +103,32 @@ func parse_struct_instantiation_expr(p *parser, left ast.Expression, bp binding_
 	return ast.StructInstantiation{
 		StructName:       structName,
 		StructPropreties: structPropreties,
+	}
+}
+
+func parse_array_instantiation_expr(p *parser) ast.Expression {
+	var UnderlyingType ast.Type
+	var lenght lexer.Token
+	var Contents []ast.Expression
+	p.expect(lexer.OPEN_BRACKET)
+	if p.currentTokenKind() != lexer.CLOSE_BRACKET {
+		lenght = p.currentToken()
+	}
+	p.expect(lexer.CLOSE_BRACKET)
+
+	UnderlyingType = parse_type(p, default_bp)
+	p.expect(lexer.OPEN_CURLY)
+	for p.hasTokens() && p.currentTokenKind() != lexer.CLOSE_CURLY {
+		var value = parse_expr(p, assigment)
+		Contents = append(Contents, value)
+		if p.currentTokenKind() != lexer.CLOSE_CURLY {
+			p.expect(lexer.COMMA)
+		}
+	}
+	p.expect(lexer.CLOSE_CURLY)
+	return ast.ArrayInstantiation{
+		Underlying: UnderlyingType,
+		Contents:   Contents,
+		Lenght:     lenght,
 	}
 }

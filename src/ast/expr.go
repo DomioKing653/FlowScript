@@ -60,10 +60,20 @@ func (n AssigmentEpr) expr() {
 }
 
 type StructInstantiation struct {
-	StructName string
+	StructName       string
 	StructPropreties map[string]Expression
 }
 
 func (n StructInstantiation) expr() {
+
+}
+
+type ArrayInstantiation struct {
+	Lenght     lexer.Token
+	Underlying Type
+	Contents   []Expression
+}
+
+func (n ArrayInstantiation) expr() {
 
 }
