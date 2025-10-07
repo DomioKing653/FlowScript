@@ -1,6 +1,8 @@
 package parser
 
 import (
+	"fmt"
+
 	"github.com/DomioKing653/FlowScript/src/ast"
 	"github.com/DomioKing653/FlowScript/src/lexer"
 )
@@ -12,7 +14,7 @@ type type_nud_lookup map[lexer.TokenKind]type_nud_handler
 type type_led_lookup map[lexer.TokenKind]type_led_handler
 type type_bp_lookup map[lexer.TokenKind]binding_power
 
-var type_bp_lu = bp_lookup{}
+var type_bp_lu = type_bp_lookup{}
 var type_nud_lu = type_nud_lookup{}
 var type_led_lu = type_led_lookup{}
 
@@ -27,10 +29,39 @@ func type_nud(kind lexer.TokenKind, nud_fn type_nud_handler) {
 
 func CreateTokenTypeLookups() {
 	type_nud(lexer.IDENTIFIER, parse_symbol_type)
+	type_nud(lexer.OPEN_BRACKET, parse_array_type)
 }
 
 func parse_symbol_type(p *parser) ast.Type {
-	return &ast.SymobolType{
+	return &ast.SymbolType{
 		Name: p.expect(lexer.IDENTIFIER).Value,
 	}
+}
+
+func parse_array_type(p *parser) ast.Type {
+	// consume '[' and ']'
+	p.expect(lexer.OPEN_BRACKET)
+	p.expect(lexer.CLOSE_BRACKET)
+	// then parse the underlying type (e.g. []T)
+	underlying := parse_type(p, default_bp)
+	return &ast.ArrayType{
+		Underlying: underlying,
+	}
+}
+func parse_type(p *parser, bp binding_power) ast.Type {
+	tokenKind := p.currentTokenKind()
+	nud_fn, exists := type_nud_lu[tokenKind]
+	if !exists {
+		panic(fmt.Sprintf("Error::Parsing->No TYPE_NUD handler for token %s", lexer.TokenKindString(tokenKind)))
+	}
+	left := nud_fn(p)
+	for type_bp_lu[p.currentTokenKind()] > bp {
+		tokenKind = p.currentTokenKind()
+		led_fn, exists := type_led_lu[tokenKind]
+		if !exists {
+			panic(fmt.Sprintf("Error::Parsing->No TYPE_LED handler for token %s", lexer.TokenKindString(tokenKind)))
+		}
+		left = led_fn(p, left, type_bp_lu[p.currentTokenKind()])
+	}
+	return left
 }

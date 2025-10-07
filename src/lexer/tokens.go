@@ -70,11 +70,14 @@ const (
 	FROM
 	TRUE
 	FALSE
+	STRUCT
+	STATIC
 
 	NULLISH_ASSIGNMENT
 )
 
 var keywords map[string]TokenKind = map[string]TokenKind{
+	"static":  STATIC,
 	"let":     LET,
 	"const":   CONST,
 	"class":   CLASS,
@@ -93,6 +96,7 @@ var keywords map[string]TokenKind = map[string]TokenKind{
 	"from":    FROM,
 	"true":    TRUE,
 	"false":   FALSE,
+	"struct":  STRUCT,
 }
 
 type Token struct {
@@ -229,6 +233,10 @@ func TokenKindString(kind TokenKind) string {
 		return "export"
 	case IN:
 		return "in"
+	case STRUCT:
+		return "struct"
+	case STATIC:
+		return "static"
 	default:
 		return fmt.Sprintf("unknown(%d)", kind)
 	}

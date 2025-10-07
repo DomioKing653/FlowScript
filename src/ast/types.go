@@ -1,10 +1,10 @@
 package ast
 
-type SymobolType struct {
+type SymbolType struct {
 	Name string //T
 }
 
-func (t *SymobolType) _type() {
+func (t *SymbolType) _type() {
 
 }
 

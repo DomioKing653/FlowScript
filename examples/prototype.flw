@@ -1,4 +1,14 @@
 let x = 50;
 const foo = x + -3;
 let bar = 3 * (x + foo);
+let bar:string;
 bar = foo;
+const foo:[]number = 30;
+
+struct Rect{
+    width:number;
+    height:number;
+    width:idk;
+}
+
+const rects:[]Rect;

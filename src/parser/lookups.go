@@ -82,4 +82,5 @@ func CreateLookups() {
 	//Statment
 	stmt(lexer.CONST, parse_var_decl_statment)
 	stmt(lexer.LET, parse_var_decl_statment)
+	stmt(lexer.STRUCT, parse_struct_decl_statment)
 }
