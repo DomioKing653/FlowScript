@@ -73,6 +73,8 @@ func CreateLookups() {
 	led(lexer.STAR, multiplicative, parse_binary_expr)
 	led(lexer.PERCENT, multiplicative, parse_binary_expr)
 
+	//calls/structs
+	led(lexer.OPEN_CURLY, call, parse_struct_instantiation_expr)
 	//Literals & Numbers
 	nud(lexer.NUMBER, parse_primary_expr)
 	nud(lexer.STRING, parse_primary_expr)

@@ -58,3 +58,12 @@ type AssigmentEpr struct {
 func (n AssigmentEpr) expr() {
 
 }
+
+type StructInstantiation struct {
+	StructName string
+	StructPropreties map[string]Expression
+}
+
+func (n StructInstantiation) expr() {
+
+}

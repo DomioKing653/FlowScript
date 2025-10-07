@@ -3,12 +3,14 @@ const foo = x + -3;
 let bar = 3 * (x + foo);
 let bar:string;
 bar = foo;
-const foo:[]number = 30;
+let foo:[]number;
 
 struct Rect{
     width:number;
     height:number;
-    width:idk;
 }
 
-const rects:[]Rect;
+const Rectangle:rect = Rect{
+    width: 3 * 5,
+    height: 8 * 3,
+};

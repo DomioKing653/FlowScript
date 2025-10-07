@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/DomioKing653/FlowScript/src/ast"
+	"github.com/DomioKing653/FlowScript/src/helpers"
 	"github.com/DomioKing653/FlowScript/src/lexer"
 )
 
@@ -81,4 +82,26 @@ func parse_grouping_expr(p *parser) ast.Expression {
 	expr := parse_expr(p, default_bp)
 	p.expect(lexer.CLOSE_PAREN)
 	return expr
+}
+
+func parse_struct_instantiation_expr(p *parser, left ast.Expression, bp binding_power) ast.Expression {
+	var structName = helpers.ExpectedType[ast.SymbolExpr](left).Value
+	var structPropreties = map[string]ast.Expression{}
+	p.expect(lexer.OPEN_CURLY)
+	for p.hasTokens() && p.currentTokenKind() != lexer.CLOSE_CURLY {
+		propretyName := p.expect(lexer.IDENTIFIER).Value
+		p.expect(lexer.COLON)
+		value := parse_expr(p, logical)
+		
+		structPropreties[propretyName] = value
+		if p.currentTokenKind() != lexer.COMMA {
+			panic(fmt.Sprintf("Error::Synax->Expected comma in %s instantiation", structName))
+		}
+		p.advance()
+	}
+	p.expect(lexer.CLOSE_CURLY)
+	return ast.StructInstantiation{
+		StructName:       structName,
+		StructPropreties: structPropreties,
+	}
 }
