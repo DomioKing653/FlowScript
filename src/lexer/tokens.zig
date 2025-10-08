@@ -1,11 +1,13 @@
 const tokenKind: type = enum {
+    //Math
     PLUS,
     MINUS,
     DASH,
     SLASH,
+    //Values
     SYMBOL,
     NUMBER,
-
+    //Parser
     EOF,
 };
 

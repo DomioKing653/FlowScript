@@ -5,12 +5,14 @@ pub fn main() !void {
     const allocator = std.heap.page_allocator;
     const path = "C:/Users/simon/AAAProjects/AAAFlowScript/test.flw";
 
-    const cwd = std.fs.cwd();
-    const file = try cwd.openFile(path, .{});
+    // otevře soubor
+    const file = try std.fs.cwd().openFile(path, .{});
     defer file.close();
 
-    const bytes = try std.io.readAllAlloc(allocator, file.reader(), 0);
+    // načte celý obsah
+    const bytes = try file.readToEndAlloc(allocator, std.math.maxInt(usize));
     defer allocator.free(bytes);
 
-    try Lexer.tokenize(bytes);
+    // výpis obsahu do konzole
+    std.debug.print("{s}", .{bytes});
 }
