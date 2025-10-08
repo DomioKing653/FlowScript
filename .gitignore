@@ -1,0 +1,9 @@
+# Go build výstupy
+bin/
+build/
+out/
+*.exe
+
+# Editor
+.vscode/
+.idea/
