@@ -1,7 +1,9 @@
-# Go build výstupy
+# Go build 
 bin/
 build/
 out/
+.zig-cache/
+/zig-out
 *.exe
 
 # Editor
