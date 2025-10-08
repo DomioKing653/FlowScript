@@ -11,5 +11,5 @@ func ExpectedType[T any](r any) T {
 	if expectedType == recievedType {
 		return r.(T)
 	}
-	panic(fmt.Sprintf("Error::Type->Expected %T but recieved %T instead", expectedType, recievedType))
+	panic(fmt.Sprintf("Error::Type->Expected %s but recieved %s instead", expectedType, recievedType))
 }

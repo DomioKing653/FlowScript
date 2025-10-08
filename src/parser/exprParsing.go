@@ -85,7 +85,7 @@ func parse_grouping_expr(p *parser) ast.Expression {
 }
 
 func parse_struct_instantiation_expr(p *parser, left ast.Expression, bp binding_power) ast.Expression {
-	var structName = helpers.ExpectedType[ast.SymbolExpr](left).Value
+	var structName = helpers.ExpectedType[*ast.SymbolExpr](left).Value
 	var structPropreties = map[string]ast.Expression{}
 	p.expect(lexer.OPEN_CURLY)
 	for p.hasTokens() && p.currentTokenKind() != lexer.CLOSE_CURLY {
