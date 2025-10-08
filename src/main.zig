@@ -5,14 +5,19 @@ pub fn main() !void {
     const allocator = std.heap.page_allocator;
     const path = "C:/Users/simon/AAAProjects/AAAFlowScript/test.flw";
 
-    // otevře soubor
+    // opening
     const file = try std.fs.cwd().openFile(path, .{});
     defer file.close();
 
-    // načte celý obsah
+    //reading file
     const bytes = try file.readToEndAlloc(allocator, std.math.maxInt(usize));
     defer allocator.free(bytes);
 
-    // výpis obsahu do konzole
-    std.debug.print("{s}", .{bytes});
+    const toks = try Lexer.tokenize(bytes);
+    for (toks) |tok| {
+        switch (tok.Value) {
+            .char => |c| std.debug.print("Token: {c}\n", .{c}),
+            .chars => |txt| std.debug.print("Token: {s}\n", .{txt}),
+        }
+    }
 }

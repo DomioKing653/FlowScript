@@ -1,8 +1,8 @@
-const tokenKind: type = enum {
+pub const TokenKind: type = enum {
     //Math
     PLUS,
     MINUS,
-    DASH,
+    TIMES,
     SLASH,
     //Values
     SYMBOL,
@@ -11,4 +11,6 @@ const tokenKind: type = enum {
     EOF,
 };
 
-const Token: type = struct { Kind: tokenKind, Value: []u8 };
+const value = union(enum) { chars: []u8, char: u8 };
+
+pub const Token: type = struct { Kind: TokenKind, Value: value };
