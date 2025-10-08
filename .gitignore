@@ -1,0 +1,7 @@
+# outputs
+zig-out/
+.zig-cache/
+
+# Editor
+.vscode/
+.idea/
