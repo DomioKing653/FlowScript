@@ -1,5 +1,6 @@
 const std = @import("std");
 const Lexer = @import("lexer/tokenize.zig");
+const Tokens = @import("lexer/tokens.zig");
 
 pub fn main() !void {
     const allocator = std.heap.page_allocator;
@@ -15,9 +16,10 @@ pub fn main() !void {
 
     const toks = try Lexer.tokenize(bytes);
     for (toks) |tok| {
+        std.debug.print("{s}->", .{try Tokens.TokenKindToString(tok.Kind)});
         switch (tok.Value) {
-            .char => |c| std.debug.print("Token: {c}\n", .{c}),
-            .chars => |txt| std.debug.print("Token: {s}\n", .{txt}),
+            .char => |c| std.debug.print("{c}\n", .{c}),
+            .chars => |txt| std.debug.print("{s}\n", .{txt}),
         }
     }
 }
