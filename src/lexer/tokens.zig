@@ -6,6 +6,8 @@ pub const TokenKind: type = enum {
     TIMES,
     SLASH,
     EQ,
+    //Misc
+    SEMI_COLON,
     //Values
     SYMBOL,
     NUMBER,
@@ -35,6 +37,7 @@ pub fn TokenKindToString(kind: TokenKind) ![]u8 {
         TokenKind.CONST => return try allocator.dupe(u8, "CONST"),
         //Misc
         TokenKind.SYMBOL => return try allocator.dupe(u8, "IDENTIFIER"),
+        TokenKind.SEMI_COLON => return try allocator.dupe(u8, "SEMI_COLON"),
         else => return try allocator.dupe(u8, "UNKNOWN"),
     }
 }

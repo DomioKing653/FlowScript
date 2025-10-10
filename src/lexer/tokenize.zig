@@ -9,6 +9,7 @@ var current_token: u8 = 89;
 var code: []u8 = undefined;
 //errors
 const LexerError = error{UknowCharater};
+const UknowCharErr = struct { Err: LexerError, Char: u8 };
 //lexing
 pub fn tokenize(program: []const u8) ![]tokens.Token {
     defer toks.deinit(alloc);
@@ -20,26 +21,37 @@ pub fn tokenize(program: []const u8) ![]tokens.Token {
     while (current_token != 0) {
         switch (current_token) {
             '+' => {
-                try toks.append(alloc, tokens.Token{ .Kind = tokens.TokenKind.PLUS, .Value = .{ .char = '+' } });
+                try toks.append(alloc, .{ .Kind = tokens.TokenKind.PLUS, .Value = .{ .char = '+' } });
                 advance();
             },
             '-' => {
-                try toks.append(alloc, tokens.Token{ .Kind = tokens.TokenKind.MINUS, .Value = .{ .char = '-' } });
+                try toks.append(alloc, .{ .Kind = tokens.TokenKind.MINUS, .Value = .{ .char = '-' } });
                 advance();
             },
             '/' => {
-                try toks.append(alloc, tokens.Token{ .Kind = tokens.TokenKind.SLASH, .Value = .{ .char = '/' } });
+                advance();
+                if (current_token == '/') {
+                    while (current_token != '\n') {
+                        advance();
+                    }
+                } else {
+                    try toks.append(alloc, .{ .Kind = tokens.TokenKind.SLASH, .Value = .{ .char = '/' } });
+                }
                 advance();
             },
             '*' => {
-                try toks.append(alloc, tokens.Token{ .Kind = tokens.TokenKind.TIMES, .Value = .{ .char = '*' } });
+                try toks.append(alloc, .{ .Kind = tokens.TokenKind.TIMES, .Value = .{ .char = '*' } });
                 advance();
             },
             '=' => {
-                try toks.append(alloc, tokens.Token{ .Kind = tokens.TokenKind.EQ, .Value = .{ .char = '=' } });
+                try toks.append(alloc, .{ .Kind = tokens.TokenKind.EQ, .Value = .{ .char = '=' } });
                 advance();
             },
-            '\n', ' ', '\t' => advance(),
+            ';' => {
+                try toks.append(alloc, .{ .Kind = tokens.TokenKind.SEMI_COLON, .Value = .{ .char = ';' } });
+                advance();
+            },
+            '\n', ' ', '\r', '\t' => advance(),
             else => {
                 if (std.ascii.isAlphabetic(current_token)) {
                     try toks.append(alloc, try lexSymbol());
@@ -50,9 +62,7 @@ pub fn tokenize(program: []const u8) ![]tokens.Token {
         }
     }
     //EOF
-    const eof_arr: [3]u8 = [_]u8{ 'E', 'O', 'F' };
-    const eof_text: []u8 = try alloc.dupe(u8, &eof_arr);
-    try toks.append(alloc, tokens.Token{ .Kind = tokens.TokenKind.EOF, .Value = .{ .chars = eof_text } });
+    try toks.append(alloc, tokens.Token{ .Kind = tokens.TokenKind.EOF, .Value = .{ .chars = try alloc.dupe(u8, "EOF") } });
     //returns tokens
     return try toks.toOwnedSlice(alloc);
 }
@@ -68,7 +78,8 @@ fn advance() void {
 
 fn lexSymbol() !tokens.Token {
     var text: std.ArrayList(u8) = .empty;
-    while (std.ascii.isAlphabetic(current_token)) {
+    defer text.deinit(alloc);
+    while (std.ascii.isAlphabetic(current_token) or current_token == '_') {
         try text.append(alloc, current_token);
         advance();
     }

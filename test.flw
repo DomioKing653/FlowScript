@@ -1,1 +1,3 @@
-let x = idk 
+//var decl
+let x_y =  idk; 
+const y = zig;

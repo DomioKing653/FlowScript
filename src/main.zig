@@ -1,12 +1,15 @@
 const std = @import("std");
 const Lexer = @import("lexer/tokenize.zig");
 const Tokens = @import("lexer/tokens.zig");
+const Parsing = @import("parser/parser.zig");
 
+fn printer(text: []u8) !void {
+    std.fs.File.stdout().write(text);
+}
 pub fn main() !void {
     const allocator = std.heap.page_allocator;
     const path = "C:/Users/simon/AAAProjects/AAAFlowScript/test.flw";
 
-    
     // opening
     const file = try std.fs.cwd().openFile(try allocator.dupe(u8, path), .{});
     defer file.close();
@@ -26,4 +29,8 @@ pub fn main() !void {
             .chars => |txt| std.debug.print("{s}\n", .{txt}),
         }
     }
+    var mainParser = Parsing.Parser{ .tokens = try allocator.dupe(Tokens.Token, toks), .pos_idx = 0, .current_token = undefined, .statements = undefined };
+    mainParser.parse() catch |err| {
+        try printer(err);
+    };
 }
