@@ -6,8 +6,14 @@ pub const TokenKind: type = enum {
     TIMES,
     SLASH,
     EQ,
-    //Misc
+    // Positional & Grouping
     SEMI_COLON,
+    OPEN_PAREN,
+    CLOSE_PAREN,
+    OPEN_BRACKET,
+    CLOSE_BRACKET,
+    OPEN_CURLY,
+    CLOSE_CURLY,
     //Values
     SYMBOL,
     NUMBER,
@@ -20,7 +26,7 @@ pub const TokenKind: type = enum {
 
 const allocator = std.heap.page_allocator;
 
-const value = union(enum) { chars: []u8, char: u8 };
+pub const value = union(enum) { chars: []u8, char: u8 };
 
 pub const Token: type = struct { Kind: TokenKind, Value: value };
 

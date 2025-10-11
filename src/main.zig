@@ -4,7 +4,7 @@ const Tokens = @import("lexer/tokens.zig");
 const Parsing = @import("parser/parser.zig");
 
 fn printer(text: []u8) !void {
-    std.fs.File.stdout().write(text);
+    _ = try std.fs.File.stdout().write(text);
 }
 pub fn main() !void {
     const allocator = std.heap.page_allocator;
@@ -18,7 +18,9 @@ pub fn main() !void {
     const bytes = try file.readToEndAlloc(allocator, std.math.maxInt(usize));
     defer allocator.free(bytes);
 
-    const toks = Lexer.tokenize(bytes) catch |err| {
+    var mainLexer = try Lexer.createLexer(bytes);
+
+    const toks = mainLexer.tokenize() catch |err| {
         std.debug.print("Lexing error: {}\n", .{err});
         return;
     };
@@ -29,8 +31,8 @@ pub fn main() !void {
             .chars => |txt| std.debug.print("{s}\n", .{txt}),
         }
     }
-    var mainParser = Parsing.Parser{ .tokens = try allocator.dupe(Tokens.Token, toks), .pos_idx = 0, .current_token = undefined, .statements = undefined };
+    var mainParser = Parsing.Parser{ .tokens = try allocator.dupe(Tokens.Token, toks), .pos_idx = 0, .current_token = undefined, .statements = undefined, .alloc = allocator };
     mainParser.parse() catch |err| {
-        try printer(err);
+        try printer(try allocator.dupe(u8, @errorName(err)));
     };
 }
