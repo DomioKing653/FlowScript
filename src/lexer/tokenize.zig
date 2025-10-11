@@ -16,10 +16,10 @@ pub const Lexer: type = struct {
         while (self.current_char != 0) {
             switch (self.current_char) {
                 '+' => {
-                    try self.addToken(tokens.TokenKind.PLUS, .{ .char = '+' });
+                    try self.addToken(tokens.TokenKind.PLUS, try self.alloc.dupe(u8, "+"));
                 },
                 '-' => {
-                    try self.addToken(tokens.TokenKind.MINUS, .{ .char = '-' });
+                    try self.addToken(tokens.TokenKind.MINUS, try self.alloc.dupe(u8, "-"));
                 },
                 '/' => {
                     self.advance();
@@ -29,23 +29,23 @@ pub const Lexer: type = struct {
                         }
                         self.advance();
                     } else {
-                        try self.addToken(tokens.TokenKind.SLASH, .{ .char = '+' });
+                        try self.addToken(tokens.TokenKind.SLASH, try self.alloc.dupe(u8, "/"));
                     }
                 },
                 '*' => {
-                    try self.addToken(tokens.TokenKind.TIMES, .{ .char = '*' });
+                    try self.addToken(tokens.TokenKind.TIMES, try self.alloc.dupe(u8, "*"));
                     self.advance();
                 },
                 '=' => {
-                    try self.addToken(tokens.TokenKind.EQ, .{ .char = '=' });
+                    try self.addToken(tokens.TokenKind.EQ, try self.alloc.dupe(u8, "="));
                     self.advance();
                 },
                 ';' => {
-                    try self.addToken(tokens.TokenKind.SEMI_COLON, .{ .char = ';' });
+                    try self.addToken(tokens.TokenKind.SEMI_COLON, try self.alloc.dupe(u8, ";"));
                     self.advance();
                 },
                 '[' => {
-                    try self.addToken(tokens.TokenKind.OPEN_BRACKET, .{ .char = ']' });
+                    try self.addToken(tokens.TokenKind.OPEN_BRACKET, try self.alloc.dupe(u8, "["));
                     self.advance();
                 },
                 '\n', ' ', '\r', '\t' => self.advance(),
@@ -59,7 +59,7 @@ pub const Lexer: type = struct {
             }
         }
         //EOF
-        try self.addToken(tokens.TokenKind.EOF, .{ .chars = try self.alloc.dupe(u8, "EOF") });
+        try self.addToken(tokens.TokenKind.EOF, try self.alloc.dupe(u8, "EOF"));
         //returns tokens
         return try self.toks.toOwnedSlice(self.alloc);
     }
@@ -85,13 +85,13 @@ pub const Lexer: type = struct {
 
         const dupe_text = try self.alloc.dupe(u8, text.items);
         if (std.mem.eql(u8, text.items, "let")) {
-            try self.addToken(tokens.TokenKind.LET, .{ .chars = dupe_text });
+            try self.addToken(tokens.TokenKind.LET, dupe_text);
         } else {
-            try self.addToken(tokens.TokenKind.SYMBOL, .{ .chars = dupe_text });
+            try self.addToken(tokens.TokenKind.SYMBOL, dupe_text);
         }
     }
 
-    fn addToken(self: *Lexer, kind: tokens.TokenKind, value: tokens.value) !void {
+    fn addToken(self: *Lexer, kind: tokens.TokenKind, value: []u8) !void {
         try self.toks.append(self.alloc, .{ .Kind = kind, .Value = value });
         self.advance();
     }

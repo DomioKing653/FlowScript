@@ -28,7 +28,7 @@ const allocator = std.heap.page_allocator;
 
 pub const value = union(enum) { chars: []u8, char: u8 };
 
-pub const Token: type = struct { Kind: TokenKind, Value: value };
+pub const Token: type = struct { Kind: TokenKind, Value: []u8 };
 
 pub fn TokenKindToString(kind: TokenKind) ![]u8 {
     switch (kind) {

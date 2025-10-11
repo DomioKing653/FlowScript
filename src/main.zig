@@ -26,10 +26,7 @@ pub fn main() !void {
     };
     for (toks) |tok| {
         std.debug.print("{s}->", .{try Tokens.TokenKindToString(tok.Kind)});
-        switch (tok.Value) {
-            .char => |c| std.debug.print("{c}\n", .{c}),
-            .chars => |txt| std.debug.print("{s}\n", .{txt}),
-        }
+        std.debug.print("{s}\n", .{tok.Value});
     }
     var mainParser = Parsing.Parser{ .tokens = try allocator.dupe(Tokens.Token, toks), .pos_idx = 0, .current_token = undefined, .statements = undefined, .alloc = allocator };
     mainParser.parse() catch |err| {
