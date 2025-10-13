@@ -7,7 +7,11 @@ pub const ParserErrors = error{ NotImplemented, ExpectedStatement, UnexpectedTok
 //Parsing
 pub fn parseStmt(p: *parser.Parser) !stmt.Statement {
     switch (p.current_token.Kind) {
-        Tokens.TokenKind.LET, Tokens.TokenKind.CONST => return try parser_var_decl(p),
+        Tokens.TokenKind.LET, Tokens.TokenKind.CONST => {
+            const parsed_stmt = try parser_var_decl(p);
+            _ = try p.expect(Tokens.TokenKind.SEMI_COLON);
+            return parsed_stmt;
+        },
         else => return ParserErrors.ExpectedStatement,
     }
     try p.advance();
@@ -21,8 +25,12 @@ fn parser_var_decl(p: *parser.Parser) !stmt.Statement {
         is_const = true;
     }
     try p.advance();
-
     const id = try p.expect(Tokens.TokenKind.SYMBOL);
-
-    return stmt.Statement{ .varStmt = .{ .is_const = is_const, .id = id } };
+    try p.advance();
+    if (p.current_token.Kind == Tokens.TokenKind.SEMI_COLON) {
+        return stmt.Statement{ .varStmt = .{ .is_const = is_const, .id = id, .value = undefined } };
+    } else {
+        //const value = undefined;
+    }
+    return stmt.Statement{ .varStmt = .{ .is_const = is_const, .id = id, .value = undefined } };
 }

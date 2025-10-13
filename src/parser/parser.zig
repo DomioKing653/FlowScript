@@ -8,16 +8,21 @@ pub const Parser = struct {
     current_token: Tokens.Token,
     statements: std.ArrayList(stmt.Statement),
     alloc: std.mem.Allocator,
-    pub fn parse(self: *Parser) !void {
+    pub fn parse(self: *Parser) ![]stmt.Statement {
         self.current_token = self.tokens[0];
         self.pos_idx += 1;
         while (self.current_token.Kind != Tokens.TokenKind.EOF) {
             try self.statements.append(self.alloc, try parseStmt.parseStmt(self));
         }
-        std.debug.print("Parsing ended", .{});
+        std.debug.print("Parsing ended\n", .{});
+        return self.statements.toOwnedSlice(self.alloc);
     }
     pub fn advance(self: *Parser) !void {
         self.current_token = self.tokens[self.pos_idx];
+        if (self.pos_idx >= self.tokens.len) {
+            _ = try std.fs.File.stderr().write("Unexpected EOF");
+            return;
+        }
         self.pos_idx += 1;
     }
 

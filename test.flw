@@ -1,3 +1,2 @@
 //var decl
-let x_y =  idk; 
-const y = zig;
+let x_y;

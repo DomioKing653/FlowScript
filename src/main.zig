@@ -29,7 +29,11 @@ pub fn main() !void {
         std.debug.print("{s}\n", .{tok.Value});
     }
     var mainParser = Parsing.Parser{ .tokens = try allocator.dupe(Tokens.Token, toks), .pos_idx = 0, .current_token = undefined, .statements = undefined, .alloc = allocator };
-    mainParser.parse() catch |err| {
-        try printer(try allocator.dupe(u8, @errorName(err)));
-    };
+    const stmts = try mainParser.parse();
+    try printer(try allocator.dupe(u8, "AST:\n"));
+    for (stmts) |stmt| {
+        switch (stmt) {
+            .varStmt => |v| std.debug.print("varStmt -> id: {s}, value: {?}\n", .{ v.id, v.value }),
+        }
+    }
 }

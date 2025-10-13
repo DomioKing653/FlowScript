@@ -1,10 +1,10 @@
 const ast = @import("ast.zig");
 const tokens = @import("../lexer/tokens.zig");
 const std = @import("std");
-
+const runtime = @import("../runtime/runtimeVal.zig");
 pub const value = union(enum) { string_val: []u8, num_val: f64, bool_val: bool };
 
-const BinaryExpr = struct {
+pub const BinaryExpr = struct {
     left: *ast.Expression,
     op: tokens.Token,
     right: *ast.Expression,
@@ -17,4 +17,4 @@ const BinaryExpr = struct {
         }
     }
 };
-pub const Prefic_Expr = struct { left: tokens.Token, right: *ast.Expression };
+pub const Prefix_Expr = struct { left: tokens.Token, right: *ast.Expression };

@@ -1,3 +1,5 @@
-pub const Statement = union { varStmt: vatDeclStmt };
+const Expression = @import(".//expression.zig");
 
-const vatDeclStmt = struct { is_const: bool, id: []u8 };
+pub const Statement = union(enum) { varStmt: vatDeclStmt };
+
+const vatDeclStmt = struct { is_const: bool, id: []u8, value: ?Expression.Prefix_Expr };
