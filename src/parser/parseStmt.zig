@@ -3,13 +3,14 @@ const stmt = @import("../ast/statement.zig");
 const parser = @import("parser.zig");
 const Tokens = @import("../lexer/tokens.zig");
 //Errors
-pub const ParserErrors = error{ NotImplemented, ExpectedStatement, UnexpectedToken };
+pub const ParserErrors = error{ NotImplemented, ExpectedStatement, UnexpectedToken, UnexpectedEOF };
 //Parsing
 pub fn parseStmt(p: *parser.Parser) !stmt.Statement {
     switch (p.current_token.Kind) {
         Tokens.TokenKind.LET, Tokens.TokenKind.CONST => {
             const parsed_stmt = try parser_var_decl(p);
             _ = try p.expect(Tokens.TokenKind.SEMI_COLON);
+            try p.advance();
             return parsed_stmt;
         },
         else => return ParserErrors.ExpectedStatement,
@@ -22,7 +23,7 @@ fn parser_var_decl(p: *parser.Parser) !stmt.Statement {
     if (p.current_token.Kind == Tokens.TokenKind.CONST) {
         is_const = true;
     } else {
-        is_const = true;
+        is_const = false;
     }
     try p.advance();
     const id = try p.expect(Tokens.TokenKind.SYMBOL);

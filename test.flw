@@ -1,2 +1,2 @@
 //var decl
-let x_y;
+const x;

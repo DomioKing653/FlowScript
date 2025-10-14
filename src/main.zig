@@ -33,7 +33,7 @@ pub fn main() !void {
     try printer(try allocator.dupe(u8, "AST:\n"));
     for (stmts) |stmt| {
         switch (stmt) {
-            .varStmt => |v| std.debug.print("varStmt -> id: {s}, value: {?}\n", .{ v.id, v.value }),
+            .varStmt => |v| std.debug.print("varStmt -> isConst: {any}, id: {s}, value: {?}\n", .{ v.is_const, v.id, v.value }),
         }
     }
 }

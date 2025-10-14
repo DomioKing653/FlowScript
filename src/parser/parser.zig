@@ -20,8 +20,7 @@ pub const Parser = struct {
     pub fn advance(self: *Parser) !void {
         self.current_token = self.tokens[self.pos_idx];
         if (self.pos_idx >= self.tokens.len) {
-            _ = try std.fs.File.stderr().write("Unexpected EOF");
-            return;
+            return parseStmt.ParserErrors.UnexpectedEOF;
         }
         self.pos_idx += 1;
     }

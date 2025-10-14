@@ -34,19 +34,15 @@ pub const Lexer: type = struct {
                 },
                 '*' => {
                     try self.addToken(tokens.TokenKind.TIMES, try self.alloc.dupe(u8, "*"));
-                    self.advance();
                 },
                 '=' => {
                     try self.addToken(tokens.TokenKind.EQ, try self.alloc.dupe(u8, "="));
-                    self.advance();
                 },
                 ';' => {
                     try self.addToken(tokens.TokenKind.SEMI_COLON, try self.alloc.dupe(u8, ";"));
-                    self.advance();
                 },
                 '[' => {
                     try self.addToken(tokens.TokenKind.OPEN_BRACKET, try self.alloc.dupe(u8, "["));
-                    self.advance();
                 },
                 '\n', ' ', '\r', '\t' => self.advance(),
                 else => {
@@ -78,16 +74,30 @@ pub const Lexer: type = struct {
     fn lexSymbol(self: *Lexer) !void {
         var text: std.ArrayList(u8) = .empty;
         defer text.deinit(self.alloc);
-        while (std.ascii.isAlphabetic(self.current_char) or self.current_char == '_') {
+        while (std.ascii.isAlphabetic(self.current_char)) {
             try text.append(self.alloc, self.current_char);
             self.advance();
         }
-
         const dupe_text = try self.alloc.dupe(u8, text.items);
         if (std.mem.eql(u8, text.items, "let")) {
-            try self.addToken(tokens.TokenKind.LET, dupe_text);
+            try self.toks.append(
+                self.alloc,
+                .{ .Kind = tokens.TokenKind.LET, .Value = dupe_text },
+            );
+            return;
+        }
+        if (std.mem.eql(u8, text.items, "const")) {
+            try self.toks.append(
+                self.alloc,
+                .{ .Kind = tokens.TokenKind.CONST, .Value = dupe_text },
+            );
+            return;
         } else {
-            try self.addToken(tokens.TokenKind.SYMBOL, dupe_text);
+            try self.toks.append(
+                self.alloc,
+                .{ .Kind = tokens.TokenKind.SYMBOL, .Value = dupe_text },
+            );
+            return;
         }
     }
 
@@ -103,5 +113,5 @@ pub fn createLexer(code: []u8) !Lexer {
 }
 
 //errors
-const LexerError = error{UknowCharater};
-const UknowCharErr = struct { Err: LexerError, Char: u8 };
+const LexerError: type = error{UknowCharater};
+const UknowCharErr: type = struct { Err: LexerError, Char: u8 };
