@@ -44,6 +44,12 @@ pub const Lexer: type = struct {
                 '[' => {
                     try self.addToken(tokens.TokenKind.OPEN_BRACKET, try self.alloc.dupe(u8, "["));
                 },
+                ']' => {
+                    try self.addToken(tokens.TokenKind.CLOSE_BRACKET, try self.alloc.dupe(u8, "]"));
+                },
+                '@' => {
+                    try self.addToken(tokens.TokenKind.AT, try self.alloc.dupe(u8, "@"));
+                },
                 '\n', ' ', '\r', '\t' => self.advance(),
                 else => {
                     if (std.ascii.isAlphabetic(self.current_char)) {

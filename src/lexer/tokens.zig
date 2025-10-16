@@ -1,11 +1,12 @@
 const std = @import("std");
 pub const TokenKind: type = enum {
-    //Math
+    //Operators
     PLUS,
     MINUS,
     TIMES,
     SLASH,
     EQ,
+    AT,
     // Positional & Grouping
     SEMI_COLON,
     OPEN_PAREN,

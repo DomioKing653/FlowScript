@@ -1,1 +1,1 @@
-const runtimeValue = struct { string_val: ?[]u8, bool_val: ?bool, number_val: ?f64 };   
+pub const runtimeValue = struct { string_val: ?[]u8, bool_val: ?bool, number_val: ?f64 };

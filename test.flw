@@ -1,2 +1,3 @@
-//var decl
+//const decl
 const x;
+let y;
