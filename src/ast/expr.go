@@ -1,6 +1,9 @@
 package ast
 
-import "github.com/DomioKing653/FlowScript/src/lexer"
+import (
+	"github.com/DomioKing653/FlowScript/src/lexer"
+	"github.com/DomioKing653/FlowScript/src/runtime"
+)
 
 //Literal
 
@@ -8,24 +11,30 @@ type NumberExpr struct {
 	Value float64
 }
 
-func (expr *NumberExpr) expr() {
-
+func (expr *NumberExpr) expr() runtime.RuntimeValue {
+	return runtime.RuntimeValue{
+		NumberVal: expr.Value,
+	}
 }
 
 type StringExpr struct {
 	Value string
 }
 
-func (expr StringExpr) expr() {
-
+func (expr StringExpr) expr() runtime.RuntimeValue {
+	return runtime.RuntimeValue{
+		StringVal: expr.Value,
+	}
 }
 
 type SymbolExpr struct {
 	Value string
 }
 
-func (expr SymbolExpr) expr() {
-
+func (expr SymbolExpr) expr() runtime.RuntimeValue {
+	return runtime.RuntimeValue{
+		StringVal: expr.Value,
+	}
 }
 
 //Complex
@@ -36,8 +45,8 @@ type BinaryOperation struct {
 	Right    Expression
 }
 
-func (bin BinaryOperation) expr() {
-
+func (bin BinaryOperation) expr() runtime.RuntimeValue {
+	panic("not implemented")
 }
 
 type PrefixEpr struct {
@@ -45,8 +54,8 @@ type PrefixEpr struct {
 	RightExpr Expression
 }
 
-func (n PrefixEpr) expr() {
-
+func (n PrefixEpr) expr() runtime.RuntimeValue {
+	panic("not implemented")
 }
 
 type AssigmentEpr struct {
@@ -55,8 +64,8 @@ type AssigmentEpr struct {
 	Value       Expression
 }
 
-func (n AssigmentEpr) expr() {
-
+func (n AssigmentEpr) expr() runtime.RuntimeValue {
+	panic("not implemented")
 }
 
 type StructInstantiation struct {
@@ -64,8 +73,8 @@ type StructInstantiation struct {
 	StructPropreties map[string]Expression
 }
 
-func (n StructInstantiation) expr() {
-
+func (n StructInstantiation) expr() runtime.RuntimeValue {
+	panic("not implemented")
 }
 
 type ArrayInstantiation struct {
@@ -74,6 +83,6 @@ type ArrayInstantiation struct {
 	Contents   []Expression
 }
 
-func (n ArrayInstantiation) expr() {
-
+func (n ArrayInstantiation) expr() runtime.RuntimeValue {
+	panic("not implemented")
 }

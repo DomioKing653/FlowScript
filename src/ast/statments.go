@@ -1,5 +1,7 @@
 package ast
 
+import "github.com/DomioKing653/FlowScript/src/runtime"
+
 type BlockStatment struct {
 	Body []Statement
 }
@@ -12,8 +14,8 @@ type ExprStatment struct {
 	Expr Expression
 }
 
-func (expStmt ExprStatment) stmt() {
-
+func (expStmt ExprStatment) stmt() runtime.RuntimeValue {
+	return expStmt.Expr.expr()
 }
 
 // Variables
@@ -24,8 +26,8 @@ type VarDeclStatment struct {
 	ExplicitType Type
 }
 
-func (expStmt VarDeclStatment) stmt() {
-
+func (expStmt VarDeclStatment) stmt() runtime.RuntimeValue {
+	panic("not implemented")
 }
 
 //Structs
@@ -40,6 +42,6 @@ type StructDeclStmt struct {
 	StructPropreties map[string]StructProprety
 }
 
-func (n StructDeclStmt) stmt() {
-
+func (n StructDeclStmt) stmt() runtime.RuntimeValue {
+	panic("not implemented")
 }

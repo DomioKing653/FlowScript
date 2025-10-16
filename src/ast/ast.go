@@ -1,11 +1,13 @@
 package ast
 
+import "github.com/DomioKing653/FlowScript/src/runtime"
+
 type Statement interface {
-	stmt()
+	stmt() runtime.RuntimeValue
 }
 
 type Expression interface {
-	expr()
+	expr() runtime.RuntimeValue
 }
 
 type Type interface {
